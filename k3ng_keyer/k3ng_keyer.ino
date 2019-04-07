@@ -1131,7 +1131,7 @@ Recent Update History
   #include <Wire.h>
 #endif
 
-#if defined(FEATURE_LCD_ADAFRUIT_I2C) || defined(FEATURE_LCD_ADAFRUIT_BACKPACK) || defined(FEATURE_LCD_YDv1) || defined(FEATURE_LCD_SAINSMART_I2C) || defined(FEATURE_LCD_FABO_PCF8574)
+#if defined(FEATURE_LCD_ADAFRUIT_I2C) || defined(FEATURE_LCD_ADAFRUIT_BACKPACK) || defined(FEATURE_LCD_YDv1) || defined(FEATURE_LCD_SAINSMART_I2C) || defined(FEATURE_LCD_FABO_PCF8574) || defined(FEATURE_LCD_MATHERTEL_PCF8574)
   #include <Wire.h>
 #endif
 
@@ -1140,8 +1140,8 @@ Recent Update History
 #endif
 
 #if defined(FEATURE_LCD_ADAFRUIT_I2C)
-  #include <Adafruit_MCP23017.h>
   #include <Adafruit_RGBLCDShield.h>
+  #include <utility/Adafruit_MCP23017.h>
 #endif
 
 #if defined(FEATURE_LCD_ADAFRUIT_BACKPACK)
@@ -1154,6 +1154,10 @@ Recent Update History
 
 #if defined(FEATURE_LCD_FABO_PCF8574)
   #include <FaBoLCD_PCF8574.h>
+#endif  
+
+#if defined(FEATURE_LCD_MATHERTEL_PCF8574)
+  #include <LiquidCrystal_PCF8574.h>
 #endif  
 
 #if defined(FEATURE_TRAINING_COMMAND_LINE_INTERFACE)
@@ -1563,6 +1567,10 @@ byte send_buffer_status = SERIAL_SEND_BUFFER_NORMAL;
 #if defined(FEATURE_LCD_FABO_PCF8574)
   FaBoLCD_PCF8574 lcd;
 #endif  
+
+#if defined(FEATURE_LCD_MATHERTEL_PCF8574)
+  LiquidCrystal_PCF8574 lcd(lcd_i2c_address);
+#endif 
 
 #if defined(FEATURE_USB_KEYBOARD) || defined(FEATURE_USB_MOUSE)
   USB Usb;
@@ -16854,7 +16862,7 @@ void ps2int_write() {
 
 void initialize_display(){
 
-  #ifdef FEATURE_DISPLAY    
+  #ifdef FEATURE_DISPLAY   
     #if defined(FEATURE_LCD_SAINSMART_I2C)
       lcd.begin();
       lcd.home();
@@ -16868,7 +16876,10 @@ void initialize_display(){
     #ifdef FEATURE_LCD_ADAFRUIT_BACKPACK
       lcd.setBacklight(HIGH);
     #endif
-
+    #ifdef FEATURE_LCD_MATHERTEL_PCF8574
+        lcd.begin(LCD_COLUMNS, LCD_ROWS);
+        lcd.setBacklight(HIGH);
+    #endif
 
     #ifdef OPTION_DISPLAY_NON_ENGLISH_EXTENSIONS  // OZ1JHM provided code, cleaned up by LA3ZA
       // Store bit maps, designed using editor at http://omerk.github.io/lcdchargen/
@@ -20955,4 +20966,3 @@ void update_time(){
 #endif // FEATURE_CLOCK
 // --------------------------------------------------------------   
 */
-
